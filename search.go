@@ -24,3 +24,16 @@ func (a TwitterApi) GetSearch(queryString string, v url.Values) (timeline []Twee
 	timeline = sr.Statuses
 	return timeline, err
 }
+
+func (a TwitterApi) GetSearchNoQueue(searchQuery string, v url.Values) (timeline []Tweet, err error) {
+	var sr searchResponse
+
+	v = cleanValues(v)
+	v.Set("q", searchQuery)
+	err = a.apiGet(BaseUrl + "/search/tweets.json", v, &sr)
+	if err != nil {
+		return nil, err
+	}
+
+	return sr.Statuses, nil
+}
